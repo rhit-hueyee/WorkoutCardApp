@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
-    "jsx": "react"
-  },
-  "extends": "@react-native/typescript-config/tsconfig.json"
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "typeRoots": ["./node_modules/@types", "./typings"],
+    "types": ["react", "react-native", "react-navigation"]
+  }
 }

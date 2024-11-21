@@ -1,21 +1,31 @@
-// app.tsx
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import WorkoutList from './src/WorkoutList';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Workout from './src/components/workout';
+import Menu from './src/components/Menu';
+import { WorkoutProvider } from './src/components/WorkoutContext';
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
 
-const App = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <WorkoutList />
-    </SafeAreaView>
-  );
+
+export type RootStackParamList = {
+  Menu: undefined;
+  Workout: { workoutId: string };
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
+  return (
+    <WorkoutProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Menu">
+          <Stack.Screen name="Menu" component={Menu} />
+          <Stack.Screen name="Workout" component={Workout} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </WorkoutProvider>
+  );
+};
 
 export default App;
