@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Workout from './src/components/workout';
-import Menu from './src/components/Menu';
-import { WorkoutProvider } from './src/components/WorkoutContext';
-import { BaselineProvider } from './src/BaselineContext';
+import Workout from './components/workouts/workout';
+import Menu from './components/menu/Menu';
+import { WorkoutProvider } from './components/workouts/WorkoutContext';
+import { BaselineProvider } from './components/baselines/BaselineContext';
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 

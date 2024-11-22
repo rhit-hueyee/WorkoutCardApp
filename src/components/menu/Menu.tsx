@@ -9,11 +9,11 @@ import {
     TextInput,
     TouchableOpacity,
   } from 'react-native';
-import { useWorkouts } from './WorkoutContext';
+import { useWorkouts } from '../workouts/WorkoutContext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { useBaselines } from '../BaselineContext';
+import { useBaselines } from '../baselines/BaselineContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Menu: React.FC = () => {

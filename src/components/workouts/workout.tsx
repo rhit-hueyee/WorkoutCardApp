@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Button } from 'react-native';
 import { useWorkouts } from './WorkoutContext';
 import { FlatList } from 'react-native-gesture-handler';
-import { useBaselines } from '../BaselineContext';
+import { useBaselines } from '../baselines/BaselineContext';
 
 const Workout: React.FC = () => {
   const { workouts, currentWorkoutIndex, failSet, completeCurrentWorkout } = useWorkouts();

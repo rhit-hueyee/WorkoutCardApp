@@ -1,4 +1,4 @@
-import { WorkoutData, Exercise, Block } from '../src/types';
+import { WorkoutData, Exercise, Block } from '../../types';
 
 export interface Workout {
     id: string;

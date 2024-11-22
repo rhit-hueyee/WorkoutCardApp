@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { workouts as defaultWorkouts, Workout } from '../../data/workouts';
-import { useBaselines } from '../BaselineContext';
+import { workouts as defaultWorkouts, Workout } from './workouts';
+import { useBaselines } from '../baselines/BaselineContext';
 
 interface WorkoutContextType {
     workouts: Workout[];
