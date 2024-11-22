@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Baseline, defaultBaselines } from './Baselines';
+import { Baseline, defaultBaselines } from '../../types';
 
 interface BaselineContextType {
     baselines: Baseline;
