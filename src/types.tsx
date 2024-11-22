@@ -35,3 +35,10 @@ export interface Set {
     pjk: 175,
     dead: 350
   };
+
+  export interface Workout {
+    id: string;
+    name: string;
+    completed: boolean;
+    blocks: Block[];
+  }

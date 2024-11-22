@@ -1,11 +1,4 @@
-import { WorkoutData, Exercise, Block } from '../../types';
-
-export interface Workout {
-    id: string;
-    name: string;
-    completed: boolean;
-    blocks: Block[];
-  }
+import { Workout } from '../../types';
   
   export const workouts: Workout[] = [
     {
