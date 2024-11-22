@@ -1,9 +1,5 @@
 export interface Baseline {
-    clean: number;
-    sqt: number;
-    bench: number;
-    pjk: number;
-    dead: number;
+    [key: string]: number;
   }
   
   export const defaultBaselines: Baseline = {
