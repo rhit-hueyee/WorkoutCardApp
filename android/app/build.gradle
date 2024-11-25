@@ -59,6 +59,8 @@ react {
  */
 def enableProguardInReleaseBuilds = false
 
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
  *

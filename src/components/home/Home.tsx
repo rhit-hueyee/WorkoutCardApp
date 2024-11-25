@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,31 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useWorkouts } from '../workouts/WorkoutProvider';
-import { useBaselines } from '../baselines/BaselineProvider';
-import BaselineList from '../baselines/BaselineList';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import BaselineList from '../baselines/BaselineList';
+import { useBaselines } from '../baselines/BaselineProvider';
 
 const Menu: React.FC = () => {
   const { workouts, setCurrentWorkoutIndex } = useWorkouts();
   const { baselines, setBaselines } = useBaselines();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Menu'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
 
   const [isModalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginRight: 10 }}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Icon name="menu-outline" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   const resetWorkouts = () => {
     const resetWorkouts = workouts.map((workout) => ({ ...workout, completed: false }));
@@ -32,24 +44,9 @@ const Menu: React.FC = () => {
     navigation.navigate('Workout', { workoutId });
   };
 
+
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Menu</Text>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Icon name="settings" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.subheader}>Baselines</Text>
-      <BaselineList
-        baselines={baselines}
-        onUpdateBaseline={(key: string, value: number) => {
-          const updatedBaselines = { ...baselines, [key]: value };
-          setBaselines(updatedBaselines); // Pass the transformed data to setBaselines
-        }}
-      />
-
 
       <Text style={styles.subheader}>Workouts</Text>
       <FlatList
@@ -73,6 +70,14 @@ const Menu: React.FC = () => {
       >
         <View style={styles.modalContainer}>
           <Text style={styles.modalHeader}>Settings</Text>
+          <Text style={styles.subheader}>Baselines</Text>
+        <BaselineList
+          baselines={baselines}
+          onUpdateBaseline={(key: string, value: number) => {
+            const updatedBaselines = { ...baselines, [key]: value };
+            setBaselines(updatedBaselines);
+        }}
+      />
           <TouchableOpacity style={styles.modalButton} onPress={resetWorkouts}>
             <Text style={styles.modalButtonText}>Reset Workouts</Text>
           </TouchableOpacity>
