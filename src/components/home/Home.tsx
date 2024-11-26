@@ -14,9 +14,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import BaselineList from '../baselines/BaselineList';
+import SettingsModal from '../settings/SettingsModal';
 import { useBaselines } from '../baselines/BaselineProvider';
 
-const Menu: React.FC = () => {
+const Home: React.FC = () => {
   const { workouts, setCurrentWorkoutIndex } = useWorkouts();
   const { baselines, setBaselines } = useBaselines();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
@@ -62,28 +63,13 @@ const Menu: React.FC = () => {
         )}
       />
 
-      <Modal
+      <SettingsModal
         visible={isModalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalHeader}>Settings</Text>
-          <Text style={styles.subheader}>Baselines</Text>
-        <BaselineList
-          baselines={baselines}
-          onUpdateBaseline={(key: string, value: number) => {
-            const updatedBaselines = { ...baselines, [key]: value };
-            setBaselines(updatedBaselines);
-        }}
+        onClose={() => setModalVisible(false)}
+        baselines={baselines}
+        setBaselines={setBaselines}
+        resetWorkouts={resetWorkouts}
       />
-          <TouchableOpacity style={styles.modalButton} onPress={resetWorkouts}>
-            <Text style={styles.modalButtonText}>Reset Workouts</Text>
-          </TouchableOpacity>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -138,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Menu;
+export default Home;
