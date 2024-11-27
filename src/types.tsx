@@ -31,7 +31,7 @@ export interface Set {
   
   export const defaultBaselines: Baseline = {
     clean: 250,
-    sqt: 360,
+    sqt: 355,
     bench: 235,
     pjk: 175,
     dead: 350

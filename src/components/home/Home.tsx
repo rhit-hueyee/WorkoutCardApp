@@ -42,8 +42,8 @@ const Home: React.FC = () => {
   };
 
   const openWorkout = (workoutId: string) => {
-    console.log('Navigating to workout:', workoutId);
-    navigation.navigate('Workout', { workoutId });
+    console.log('Navigating to workout:', workoutId); 
+    navigation.navigate('Workout', { workoutId }); 
   };
 
 
