@@ -13,12 +13,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import BaselineList from '../baselines/BaselineList';
 import SettingsModal from '../settings/SettingsModal';
 import { useBaselines } from '../baselines/BaselineProvider';
 
 const Home: React.FC = () => {
-  const { workouts, setCurrentWorkoutIndex } = useWorkouts();
+  const { workouts, saveWorkouts } = useWorkouts();
   const { baselines, setBaselines } = useBaselines();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
 
@@ -36,12 +35,14 @@ const Home: React.FC = () => {
     });
   }, [navigation]);
 
-  const resetWorkouts = () => {
+  const resetWorkouts = async () => {
     const resetWorkouts = workouts.map((workout) => ({ ...workout, completed: false }));
+    await saveWorkouts(resetWorkouts);
     alert('Workouts have been reset to incomplete.');
   };
 
   const openWorkout = (workoutId: string) => {
+    console.log('Navigating to workout:', workoutId);
     navigation.navigate('Workout', { workoutId });
   };
 
@@ -53,6 +54,9 @@ const Home: React.FC = () => {
       <FlatList
         data={workouts}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => (
+          <Text style={styles.subheader}>No workouts available.</Text>
+        )}
         renderItem={({ item }) => (
           <View style={styles.workout}>
             <Text style={styles.workoutName}>
@@ -62,6 +66,7 @@ const Home: React.FC = () => {
           </View>
         )}
       />
+
 
       <SettingsModal
         visible={isModalVisible}

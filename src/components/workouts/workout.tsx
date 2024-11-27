@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { useWorkouts } from './WorkoutProvider';
 import { useBaselines } from '../baselines/BaselineProvider';
 import { calculateWeight } from './WorkoutUtils';
@@ -7,6 +7,7 @@ import WorkoutBlock from './WorkoutBlock';
 
 const Workout: React.FC = () => {
   const { workouts, currentWorkoutIndex, completeCurrentWorkout, failSet } = useWorkouts();
+  console.log('Workouts:', workouts);
   const { baselines } = useBaselines();
   const currentWorkout = workouts[currentWorkoutIndex];
 
@@ -19,7 +20,7 @@ const Workout: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.header}>{currentWorkout.name}</Text>
       {currentWorkout.blocks.map((block, index) => (
         <WorkoutBlock
@@ -32,7 +33,7 @@ const Workout: React.FC = () => {
       {!currentWorkout.completed && (
         <Button title="Mark as Completed" onPress={completeCurrentWorkout} />
       )}
-    </View>
+    </ScrollView>
   );
 };
 

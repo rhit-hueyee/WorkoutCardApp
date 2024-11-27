@@ -1,29 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Exercise, Set } from '../../types';
+import { View, Text, StyleSheet } from 'react-native';
+import { Exercise, Set, Baseline } from '../../types';
 import { calculateWeight } from './WorkoutUtils';
 
 interface WorkoutExerciseProps {
   exercise: Exercise;
-  baselines: Record<string, number>;
-  onFailSet: (exerciseName: string) => void; // Callback for failing a set
+  baselines: Baseline;
+  onFailSet: (exerciseName: string) => void;
 }
 
-const WorkoutExercise: React.FC<WorkoutExerciseProps> = ({ exercise, baselines, onFailSet }) => {
+const WorkoutExercise: React.FC<WorkoutExerciseProps> = ({ exercise, baselines }) => {
   const renderSetRow = (set: Set, index: number) => {
-    const weight = calculateWeight(exercise.name, baselines, set.percent, set.loadPercent);
+    // Determine weight to display
+    const weight =
+      set.source && baselines
+        ? calculateWeight(set.source, baselines, set.percent, set.loadPercent)
+        : set.weight
+        ? `${set.weight} lbs`
+        : '-';
 
     return (
       <View style={styles.setRow} key={index}>
-        <Text style={styles.setCell}>{set.percent || '-'}</Text>
-        <Text style={styles.setCell}>{weight ? `${weight} lbs` : '-'}</Text>
+        <Text style={styles.setCell}>{weight}</Text>
         <Text style={styles.setCell}>{set.reps || '-'}</Text>
-        <Text style={styles.setCell}>{set.loadPercent || '-'}</Text>
-        {!set.failed && (
-          <TouchableOpacity onPress={() => onFailSet(exercise.name)}>
-            <Text style={styles.failButton}>Fail</Text>
-          </TouchableOpacity>
-        )}
       </View>
     );
   };
@@ -33,10 +32,8 @@ const WorkoutExercise: React.FC<WorkoutExerciseProps> = ({ exercise, baselines, 
       <Text style={styles.exerciseName}>{exercise.name}</Text>
       <View style={styles.setTable}>
         <View style={styles.setRow}>
-          <Text style={[styles.setCell, styles.headerCell]}>%</Text>
           <Text style={[styles.setCell, styles.headerCell]}>Weight</Text>
           <Text style={[styles.setCell, styles.headerCell]}>Reps</Text>
-          <Text style={[styles.setCell, styles.headerCell]}>Load %</Text>
         </View>
         {exercise.sets?.map((set, index) => renderSetRow(set, index))}
       </View>
@@ -71,10 +68,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   headerCell: {
-    fontWeight: 'bold',
-  },
-  failButton: {
-    color: 'red',
     fontWeight: 'bold',
   },
 });

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveToStorage, loadFromStorage } from '../../utils/storage'; // Update the path to your utils
 import { Baseline, defaultBaselines } from '../../types';
 
 const BASELINE_STORAGE_KEY = 'baselineConstants';
@@ -17,21 +17,20 @@ export const BaselineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     const loadBaselines = async () => {
-      const storedBaselines = await AsyncStorage.getItem(BASELINE_STORAGE_KEY);
+      const storedBaselines = await loadFromStorage<Baseline>(BASELINE_STORAGE_KEY);
       if (storedBaselines) {
-        setBaselines(JSON.parse(storedBaselines));
+        setBaselines(storedBaselines);
       }
     };
     loadBaselines();
   }, []);
 
   const saveBaselines = async (newBaselines: Baseline) => {
-    await AsyncStorage.setItem(BASELINE_STORAGE_KEY, JSON.stringify(newBaselines));
+    await saveToStorage(BASELINE_STORAGE_KEY, newBaselines);
     setBaselines(newBaselines);
   };
 
   const resetWorkoutsAndUpdateBaselines = async () => {
-    // Reset logic here (if any)
     const updatedBaselines: Baseline = Object.fromEntries(
       Object.entries(baselines).map(([key, value]) => {
         const newValue = Math.round((value / 0.95) / 5) * 5;

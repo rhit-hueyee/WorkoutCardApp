@@ -4,6 +4,7 @@ export interface Set {
     reps?: string;
     loadPercent?: string;
     failed?: boolean;
+    weight?: string;
   }
   
   export interface Exercise {
@@ -14,7 +15,7 @@ export interface Set {
   
   export interface Block {
     blockName: string;
-    type: "duration-based" | "set-based" | "simple-reps";
+    type: "set-based" | "simple";
     exercises: Exercise[];
   }
   

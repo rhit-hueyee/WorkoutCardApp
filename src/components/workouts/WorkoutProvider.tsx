@@ -3,13 +3,15 @@ import { Workout } from '../../types';
 import { loadFromStorage, saveToStorage } from '../../utils/storage';
 import { updateAllBaselines, adjustSingleBaseline } from '../baselines/BaselineUtils';
 import { useBaselines } from '../baselines/BaselineProvider';
+import { workouts as defaultWorkouts } from './workoutsData';
 
 const WORKOUT_STORAGE_KEY = 'workoutCompletion';
 
 interface WorkoutContextType {
     workouts: Workout[];
     currentWorkoutIndex: number;
-    setCurrentWorkoutIndex: (index: number) => void; // Add this line
+    setCurrentWorkoutIndex: (index: number) => void; 
+    saveWorkouts: (updateWorksouts: Workout[]) => Promise<void>;
     completeCurrentWorkout: () => Promise<void>;
     failSet: (exerciseName: string) => Promise<void>;
   }
@@ -20,15 +22,23 @@ const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
 export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [currentWorkoutIndex, setCurrentWorkoutIndex] = useState(0);
-  const { baselines, setBaselines } = useBaselines(); // Access baselines
+  const { baselines, setBaselines } = useBaselines();
 
+
+  // Load Workouts
   useEffect(() => {
     const loadWorkouts = async () => {
       const storedWorkouts = await loadFromStorage<Workout[]>(WORKOUT_STORAGE_KEY);
-      setWorkouts(storedWorkouts || []);
+      if(storedWorkouts) {
+        setWorkouts(storedWorkouts);
+      } else {
+        setWorkouts(defaultWorkouts);
+      }
     };
     loadWorkouts();
   }, []);
+
+  
 
   const saveWorkouts = async (updatedWorkouts: Workout[]) => {
     await saveToStorage(WORKOUT_STORAGE_KEY, updatedWorkouts);
@@ -45,14 +55,14 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (currentWorkoutIndex < workouts.length - 1) {
       setCurrentWorkoutIndex(currentWorkoutIndex + 1);
     } else {
-      const updatedBaselines = updateAllBaselines(baselines); // Pass baselines
+      const updatedBaselines = updateAllBaselines(baselines); 
       setBaselines(updatedBaselines);
       setCurrentWorkoutIndex(0);
     }
   };
 
   const failSet = async (exerciseName: string) => {
-    const updatedBaselines = adjustSingleBaseline(baselines, exerciseName); // Pass baselines and exerciseName
+    const updatedBaselines = adjustSingleBaseline(baselines, exerciseName); 
     setBaselines(updatedBaselines);
     await completeCurrentWorkout();
   };
@@ -66,7 +76,8 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
       value={{
         workouts,
         currentWorkoutIndex,
-        setCurrentWorkoutIndex: updateWorkoutIndex, // Provide the function here
+        setCurrentWorkoutIndex: updateWorkoutIndex,
+        saveWorkouts,
         completeCurrentWorkout,
         failSet,
       }}
