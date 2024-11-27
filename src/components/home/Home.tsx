@@ -42,8 +42,8 @@ const Home: React.FC = () => {
   };
 
   const openWorkout = (workoutId: string) => {
-    console.log('Navigating to workout:', workoutId);
-    navigation.navigate('Workout', { workoutId });
+    console.log('Navigating to workout:', workoutId); 
+    navigation.navigate('Workout', { workoutId }); 
   };
 
 
@@ -71,9 +71,8 @@ const Home: React.FC = () => {
       <SettingsModal
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
-        baselines={baselines}
-        setBaselines={setBaselines}
         resetWorkouts={resetWorkouts}
+        setWorkouts={saveWorkouts}
       />
     </View>
   );
@@ -93,16 +92,19 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'black'
   },
   subheader: {
     fontSize: 20,
     marginVertical: 10,
+    color: 'black'
   },
   workout: {
     marginBottom: 10,
   },
   workoutName: {
     fontSize: 16,
+    color: 'black'
   },
   modalContainer: {
     flex: 1,

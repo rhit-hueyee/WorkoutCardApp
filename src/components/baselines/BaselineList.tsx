@@ -8,6 +8,11 @@ interface BaselineListProps {
 }
 
 const BaselineList: React.FC<BaselineListProps> = ({ baselines, onUpdateBaseline }) => {
+  if (!baselines || Object.keys(baselines).length === 0) {
+    return <Text>No baselines available.</Text>; // Handle empty state
+  }
+
+
   const renderBaseline = ([key, value]: [string, number]) => (
     <View style={styles.baselineItem} key={key}>
       <Text style={styles.baselineKey}>{key}:</Text>
@@ -42,6 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     flex: 1,
+    color: 'black'
   },
   baselineInput: {
     borderWidth: 1,
@@ -50,10 +56,12 @@ const styles = StyleSheet.create({
     padding: 5,
     width: 80,
     textAlign: 'center',
+    color: 'grey'
   },
   unit: {
     marginLeft: 10,
     fontSize: 14,
+    color: 'black'
   },
 });
 

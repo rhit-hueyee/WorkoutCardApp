@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'black'
   },
   blockContainer: {
     marginBottom: 10,
@@ -69,10 +70,12 @@ const styles = StyleSheet.create({
   },
   simpleExerciseName: {
     fontSize: 16,
+    color: 'black'
   },
   simpleExerciseDetail: {
     fontSize: 16,
     fontStyle: 'italic',
+    color: 'black'
   },
 });
 

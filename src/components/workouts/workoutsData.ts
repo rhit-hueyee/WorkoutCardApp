@@ -253,8 +253,174 @@ import { Workout } from '../../types';
                 ]
               }
             ]
+          },
+          {
+            "blockName": "Stretch Work",
+            "type": "simple",
+            "exercises": [
+              {
+                "name": "Standing Hamstring",
+                "duration": "30s x2 each",
+              },
+              {
+                "name": "Low Lunge",
+                "duration": "30s x2 each",
+              },
+              {
+                "name": "Front Split",
+                "duration": "60s x2 each",
+              },
+            ]
           }
       ],
+    },
+    {
+      id: "Week1Day3",
+      name: "Week 1, Day 2",
+      completed: false,
+      blocks: [
+        {
+          "blockName": "Dynamic Warmup",
+          "type": "simple",
+          "exercises": [
+            { "name": "Stride 50 yrd",
+              "duration": "x2"
+            },
+            { "name": "Backwards Run 30 yrd",
+              "duration": "x2"
+            },
+            { "name": "Forward Skip Arm Swing 20 yrd",
+              "duration": "x1"
+            },
+            { "name": "Backwards Skip Arm Swing 20 yrd",
+              "duration": "x1"
+            },
+            { "name": "Lateral Shuffle Arm Swing 20 yrd",
+              "duration": "x2"
+            },
+            { "name": "Lunge Walk 10 yrd",
+              "duration": "x1"
+            },
+            { "name": "Backwards Lung Walk 10 yrd",
+              "duration": "x1"
+            },
+            { "name": "Backwards Lung Walk 10 yrd",
+              "duration": "x1"
+            },
+            { "name": "High Knee Walk and Grab 10 yrd",
+              "duration": "x1"
+            },
+            { "name": "Walking Leg Swing 10 yrd",
+              "duration": "x1"
+            },
+            { "name": "Heel Up 20 yrd",
+              "duration": "x1"
+            },
+            { "name": "High Knee Skip 20 yrd",
+              "duration": "x1"
+            },
+            { "name": "High Knee Run 15 yrd",
+              "duration": "x1"
+            },
+            { "name": "Backwards High Knee Run 20 yrd",
+              "duration": "x1"
+            },
+            { "name": "High Knee Run 5 yrd Spring 15 yrd",
+              "duration": "x2"
+            },
+          ]
+        }, 
+        {
+          "blockName": "Speed Work",
+          "type": "simple",
+          "exercises": [
+            {
+              "name": "10 yard Sprints",
+              "duration": "x2"
+            },
+            {
+              "name": "20 yard Sprints",
+              "duration": "x2"
+            },
+            {
+              "name": "30 yard Sprints",
+              "duration": "x2"
+            }
+          ]
+        },
+        {
+          "blockName": "Agility",
+          "type": "simple",
+          "exercises": [
+            {
+              "name": "Pro Agility Shuttle",
+              "duration": "x2 each"
+            },
+            {
+              "name": "Three Cone Drill",
+              "duration": "x2 each"
+            }
+          ]
+        },
+        {
+          "blockName": "Abs",
+          "type": "set-based",
+          "exercises": [
+            {
+              "name": "Hanging Leg Raise",
+              "sets": [
+                { "reps": "10" },
+                { "reps": "10" },
+                { "reps": "10" },
+                { "reps": "10" }
+              ]
+            },
+            {
+              "name": "Cable Crunches",
+              "sets": [
+                { "weight": "145", "reps": "10" },
+                { "weight": "145", "reps": "10" },
+                { "weight": "145", "reps": "10" },
+                { "weight": "145", "reps": "10" }
+              ]
+            }
+          ]
+        },
+        {
+          "blockName": "Stretch Work",
+          "type": "simple",
+          "exercises": [
+            {
+              "name": "Toe Touches",
+              "duration": "30s x2 each",
+            },
+            {
+              "name": "Butterflies",
+              "duration": "60s x3",
+            },
+            {
+              "name": "Side Split",
+              "duration": "60s x3 each",
+            },
+          ]
+        }
+      ]
+    },
+    {
+      id: "Week1Day4",
+      name: "Week 1, Day 4",
+      completed: false,
+      blocks: [
+        {
+          "blockName": "Stamina",
+          "type": "simple",
+          "exercises": [
+            { "name": "Steady State Air Bike",
+              "duration": "45 minutse"
+            }
+          ]
+        }
+      ]
     }
   ];
   

@@ -20,6 +20,8 @@ export const BaselineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const storedBaselines = await loadFromStorage<Baseline>(BASELINE_STORAGE_KEY);
       if (storedBaselines) {
         setBaselines(storedBaselines);
+      } else {
+        setBaselines(defaultBaselines)
       }
     };
     loadBaselines();

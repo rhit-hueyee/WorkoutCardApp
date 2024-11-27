@@ -44,11 +44,13 @@ const WorkoutExercise: React.FC<WorkoutExerciseProps> = ({ exercise, baselines }
 const styles = StyleSheet.create({
   exercise: {
     marginBottom: 20,
+    color: 'black'
   },
   exerciseName: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'black'
   },
   setTable: {
     borderWidth: 1,
@@ -66,9 +68,11 @@ const styles = StyleSheet.create({
   setCell: {
     flex: 1,
     textAlign: 'center',
+    color: 'black'
   },
   headerCell: {
     fontWeight: 'bold',
+    color: 'black'
   },
 });
 

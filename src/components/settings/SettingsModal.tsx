@@ -8,16 +8,20 @@ import {
   Animated,
   Dimensions,
   PanResponder,
+  Alert,
 } from 'react-native';
 import BaselineList from '../baselines/BaselineList';
 import Icon from 'react-native-vector-icons/Ionicons';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
+import { useBaselines } from '../baselines/BaselineProvider';
+import { Workout } from '../../types';
 
 interface SettingsModalProps {
   visible: boolean;
   onClose: () => void;
-  baselines: Record<string, number>;
-  setBaselines: (updatedBaselines: Record<string, number>) => void;
   resetWorkouts: () => void;
+  setWorkouts: (workouts: Workout[]) => void;
 }
 
 const screenWidth = Dimensions.get('window').width;
@@ -25,16 +29,15 @@ const screenWidth = Dimensions.get('window').width;
 const SettingsModal: React.FC<SettingsModalProps> = ({
   visible,
   onClose,
-  baselines,
-  setBaselines,
   resetWorkouts,
+  setWorkouts,
 }) => {
   const slideAnim = useRef(new Animated.Value(screenWidth)).current;
-  const [localVisible, setLocalVisible] = useState(visible);
+  const { baselines, setBaselines } = useBaselines();
+
 
   useEffect(() => {
     if (visible) {
-      setLocalVisible(true);
       Animated.timing(slideAnim, {
         toValue: 0, // Slide into the screen
         duration: 300,
@@ -45,9 +48,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         toValue: screenWidth, // Slide out of the screen
         duration: 300,
         useNativeDriver: true,
-      }).start(() => {
-        setLocalVisible(false);
-      });
+      }).start();
     }
   }, [visible]);
 
@@ -66,8 +67,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           duration: 300,
           useNativeDriver: true,
         }).start(() => {
-          setLocalVisible(false);
-          onClose();
+          onClose(); // Notify parent to close modal
         });
       } else {
         Animated.timing(slideAnim, {
@@ -79,7 +79,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     },
   });
 
-  if (!localVisible) return null;
+  if (!visible) return null;
+
+  const handleImport = async () => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.json],
+      });
+
+      const fileContent = await RNFS.readFile(result.uri, 'utf8');
+      const importedWorkouts = JSON.parse(fileContent);
+
+      if (Array.isArray(importedWorkouts)) {
+        setWorkouts(importedWorkouts);
+        Alert.alert('Success', 'Workouts imported successfully!');
+      } else {
+        throw new Error('Invalid file format');
+      }
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+        console.log('User canceled the picker');
+      } else {
+        console.error('Error importing workouts:', error);
+        Alert.alert('Error', 'Failed to import workouts. Please check the file format.');
+      }
+    }
+  };
 
   return (
     <Modal
@@ -94,7 +119,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           {...panResponder.panHandlers}
         >
           {/* Close button */}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPressOut={() => {
+              onClose();
+            }}
+          >
             <Icon name="close" size={30} color="black" />
           </TouchableOpacity>
 
@@ -107,8 +137,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               setBaselines(updatedBaselines);
             }}
           />
-          <TouchableOpacity style={styles.modalButton} onPress={resetWorkouts}>
-            <Text style={styles.modalButtonText}>Reset Workouts</Text>
+
+          {/* Import Workouts Button */}
+          <TouchableOpacity style={styles.modalButton} onPress={handleImport}>
+            <Text style={styles.modalButtonText}>Import Workouts</Text>
+          </TouchableOpacity>
+
+          {/* Reset Workouts Button */}
+          <TouchableOpacity style={styles.resetButton} onPress={resetWorkouts}>
+            <Text style={styles.resetButtonText}>Reset Workouts</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -130,6 +167,7 @@ const styles = StyleSheet.create({
     width: '80%', // Adjust modal width as needed
     backgroundColor: 'white',
     padding: 20,
+    justifyContent: 'space-between', // Space elements appropriately
   },
   closeButton: {
     position: 'absolute',
@@ -142,18 +180,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: 'black'
   },
   subheader: {
     fontSize: 20,
     marginVertical: 10,
+    color: 'black'
   },
   modalButton: {
-    backgroundColor: '#ff6b6b',
+    backgroundColor: '#6b6bff',
     padding: 10,
     borderRadius: 5,
     marginBottom: 15,
   },
   modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  resetButton: {
+    backgroundColor: '#ff6b6b', // Red background for reset
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    alignSelf: 'stretch', // Make it span the width
+  },
+  resetButtonText: {
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
