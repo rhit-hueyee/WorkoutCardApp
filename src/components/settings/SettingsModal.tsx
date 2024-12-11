@@ -85,49 +85,56 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const handleImport = async () => {
     try {
-      const result = await DocumentPicker.pickSingle({
+      const results = await DocumentPicker.pick({
         type: [DocumentPicker.types.json],
+        allowMultiSelection: true,
       });
   
-      console.log('Selected file URI:', result.uri);
+      //console.log('Selected files:', results);
   
-      const fileContent = await RNFS.readFile(result.uri, 'utf8');
-      console.log('Raw file content:', fileContent);
+      const allWorkouts = [];
   
-      try {
-        const importedWorkouts = JSON.parse(fileContent);
-        console.log('Parsed JSON:', importedWorkouts);
-      
-        if (Array.isArray(importedWorkouts)) {
-          // It's an array of workouts
-          setWorkouts(importedWorkouts);
-          Alert.alert('Success', 'Workouts imported successfully!');
-        } else if (typeof importedWorkouts === 'object' && importedWorkouts !== null) {
-          // It's a single workout object, wrap it in an array
-          setWorkouts([importedWorkouts]);
-          Alert.alert('Success', 'Single workout imported successfully!');
-        } else {
-          throw new Error('Invalid file format: Expected an array or an object');
-        }
-      } catch (jsonError) {
-        if (jsonError instanceof Error) {
-          console.error('Error parsing JSON:', jsonError.message);
-          Alert.alert('Error', 'Failed to parse JSON. Ensure the file contains valid JSON.');
-        } else {
-          console.error('Unknown error occurred during JSON parsing:', jsonError);
-          Alert.alert('Error', 'An unknown error occurred. Please try again.');
+      for (const result of results) {
+        try {
+          //console.log('Reading file:', result.uri);
+          const fileContent = await RNFS.readFile(result.uri, 'utf8');
+          //console.log('Raw file content:', fileContent);
+  
+          const parsedData = JSON.parse(fileContent);
+          if (Array.isArray(parsedData)) {
+            // If the file contains an array of workouts, add them all
+            allWorkouts.push(...parsedData);
+          } else if (typeof parsedData === 'object' && parsedData !== null) {
+            // If the file contains a single workout, add it
+            allWorkouts.push(parsedData);
+          } else {
+            throw new Error('Invalid file format: Expected an array or an object');
+          }
+        } catch (error) {
+          console.error(`Error processing file ${result.name}:`, (error as Error).message);
+          Alert.alert(
+            'Error',
+            `Failed to process file "${result.name}". Please ensure it contains valid JSON.`
+          );
         }
       }
-      
+  
+      if (allWorkouts.length > 0) {
+        setWorkouts(allWorkouts);
+        Alert.alert('Success', `Imported ${allWorkouts.length} workouts successfully!`);
+      } else {
+        Alert.alert('No Workouts', 'No valid workouts were imported.');
+      }
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
         console.log('User canceled the picker');
       } else {
         console.error('Error importing workouts:', error);
-        Alert.alert('Error', 'Failed to import workouts. Please check the file format.');
+        Alert.alert('Error', 'Failed to import workouts. Please try again.');
       }
     }
   };
+  
   
     
 
