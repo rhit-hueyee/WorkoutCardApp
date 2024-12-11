@@ -11,7 +11,7 @@ const Workout: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'Workout'>>();
   const { workoutId } = route.params;
 
-  const { workouts, currentWorkoutIndex, completeCurrentWorkout, failSet } = useWorkouts();
+  const { workouts, completeCurrentWorkout, failSet } = useWorkouts();
   console.log('Workouts:', workouts);
   const { baselines } = useBaselines();
   const currentWorkout = workouts.find(workout => workout.id === workoutId);

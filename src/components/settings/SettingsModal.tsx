@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   PanResponder,
+  Platform,
   Alert,
 } from 'react-native';
 import BaselineList from '../baselines/BaselineList';
@@ -16,6 +17,7 @@ import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { useBaselines } from '../baselines/BaselineProvider';
 import { Workout } from '../../types';
+import RNBlobUtil from 'react-native-blob-util';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -86,16 +88,37 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       const result = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.json],
       });
-
+  
+      console.log('Selected file URI:', result.uri);
+  
       const fileContent = await RNFS.readFile(result.uri, 'utf8');
-      const importedWorkouts = JSON.parse(fileContent);
-
-      if (Array.isArray(importedWorkouts)) {
-        setWorkouts(importedWorkouts);
-        Alert.alert('Success', 'Workouts imported successfully!');
-      } else {
-        throw new Error('Invalid file format');
+      console.log('Raw file content:', fileContent);
+  
+      try {
+        const importedWorkouts = JSON.parse(fileContent);
+        console.log('Parsed JSON:', importedWorkouts);
+      
+        if (Array.isArray(importedWorkouts)) {
+          // It's an array of workouts
+          setWorkouts(importedWorkouts);
+          Alert.alert('Success', 'Workouts imported successfully!');
+        } else if (typeof importedWorkouts === 'object' && importedWorkouts !== null) {
+          // It's a single workout object, wrap it in an array
+          setWorkouts([importedWorkouts]);
+          Alert.alert('Success', 'Single workout imported successfully!');
+        } else {
+          throw new Error('Invalid file format: Expected an array or an object');
+        }
+      } catch (jsonError) {
+        if (jsonError instanceof Error) {
+          console.error('Error parsing JSON:', jsonError.message);
+          Alert.alert('Error', 'Failed to parse JSON. Ensure the file contains valid JSON.');
+        } else {
+          console.error('Unknown error occurred during JSON parsing:', jsonError);
+          Alert.alert('Error', 'An unknown error occurred. Please try again.');
+        }
       }
+      
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
         console.log('User canceled the picker');
@@ -105,6 +128,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       }
     }
   };
+  
+    
 
   return (
     <Modal
@@ -139,12 +164,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           />
 
           {/* Import Workouts Button */}
-          <TouchableOpacity style={styles.modalButton} onPress={handleImport}>
+          <TouchableOpacity style={styles.modalButton} onPressOut={handleImport}>
             <Text style={styles.modalButtonText}>Import Workouts</Text>
           </TouchableOpacity>
 
           {/* Reset Workouts Button */}
-          <TouchableOpacity style={styles.resetButton} onPress={resetWorkouts}>
+          <TouchableOpacity style={styles.resetButton} onPressOut={resetWorkouts}>
             <Text style={styles.resetButtonText}>Reset Workouts</Text>
           </TouchableOpacity>
         </Animated.View>
